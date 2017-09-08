@@ -1,4 +1,5 @@
 import './app';
 
 // elements
-import './elements/test';
+import './elements/grid';
+import './elements/controller';

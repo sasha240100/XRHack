@@ -27,6 +27,7 @@
     "webpack-dev-server": "^2.7.1"
   },
   "dependencies": {
+    "ar.js": "^1.4.10",
     "three": "^0.87.1",
     "whs": "^2.1.8"
   }

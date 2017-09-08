@@ -1,3 +1,4 @@
-const hello = () => 'Hello world';
+import './app';
 
-console.log(hello());
+// elements
+import './elements/test';

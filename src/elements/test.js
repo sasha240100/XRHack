@@ -5,5 +5,5 @@ import {app} from '../app';
 
 new Box({
   geometry: [1, 1, 1],
-  material: new MeshBasicMaterial({color: 0xff0000})
+  material: new MeshBasicMaterial({color: 0x00ff00})
 }).addTo(app);

@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
     "start": "webpack-dev-server --host 192.168.1.19",
-    "server": "babel-node ./server/index.js"
+    "server": "./node_modules/.bin/babel-node ./server/index.js"
   },
   "repository": {
     "type": "git",

@@ -10,9 +10,9 @@ import {
   Group
 } from 'whs';
 
-import * as VRKit from 'whs/modules/VRKit.js';
+// import * as VRKit from 'whs/modules/VRKit.js';
 
-const camera = new PerspectiveCamera({
+export const camera = new PerspectiveCamera({
   position: [0, 0, 5]
 });
 

@@ -1,0 +1,23 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "./node_modules/.bin/mocha tests/**/*test.js"
+  },
+  "author": "Gustavo Henrique",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.13.3",
+    "sequelize": "^3.17.1",
+    "socket.io": "^1.4.3",
+    "sqlite3": "^3.1.1"
+  },
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "mocha": "^2.3.4",
+    "sequelize-fixtures": "^0.4.8"
+  }
+}

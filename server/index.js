@@ -1,32 +1,29 @@
-var app = require('express')();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-var port = process.env.PORT || 3000;
+// Load required modules
+var https   = require("https");                // http server core module
+var express = require("express");           // web framework external module
+var socketIo = require("socket.io");        // web socket external module
+var easyrtc = require('./lib/easyrtc_server');               // EasyRTC external module
+var fs      = require("fs");
 
-var argv = require('yargs').argv;
+process.title = "node-easyrtc";
 
+var app = express();
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
-
 app.get('/client', function(req, res){
-  res.sendFile(__dirname + '/client.html');
-});
-
-io.on('connection', function(socket){
-  console.log('connection');
-
-  socket.on('data-rotation', function(msg){
-    console.log(msg);
-    io.emit('update-rotation', msg);
+    res.sendFile(__dirname + '/client.html');
   });
+  
+var webServer = https.createServer({
+    key:  fs.readFileSync("domain.key"),
+    cert: fs.readFileSync("domain.cert")
+}, app).listen(8443);
 
-  socket.on('data-position', function(msg){
-    console.log(msg);
-    io.emit('update-position', msg);
-  });
-});
+var socketServer = socketIo.listen(webServer, {"log level":1});
 
-http.listen(port, (argv.host ||'192.168.1.19'), function(){
-  console.log('listening on *:' + port);
+var rtc = easyrtc.listen(app, socketServer, null, function(err, rtcRef) {
+    rtcRef.events.on("roomCreate", function(appObj, creatorConnectionObj, roomName, roomOptions, callback) {
+        appObj.events.defaultListeners.roomCreate(appObj, creatorConnectionObj, roomName, roomOptions, callback);
+    });
 });

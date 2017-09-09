@@ -17,7 +17,7 @@ export const camera = new PerspectiveCamera({
 });
 
 const cameraGroup = new Group(camera);
-cameraGroup.position.set(10, 5, 5);
+cameraGroup.position.set(0, 5, 5);
 
 export const app = new App([
   new ElementModule(),

@@ -16,9 +16,14 @@ app.get('/client', function(req, res){
 io.on('connection', function(socket){
   console.log('connection');
 
-  socket.on('data', function(msg){
+  socket.on('data-rotation', function(msg){
     console.log(msg);
-    io.emit('update', msg);
+    io.emit('update-rotation', msg);
+  });
+
+  socket.on('data-position', function(msg){
+    console.log(msg);
+    io.emit('update-position', msg);
   });
 });
 

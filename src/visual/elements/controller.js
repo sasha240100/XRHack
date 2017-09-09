@@ -47,7 +47,8 @@ new Importer({
 }).addTo(fixGroup).then(controller => {
   const degToRad = (deg) => deg / 180 * Math.PI;
 
-  socket.on('update', data => {
+
+  socket.on('update-rotation', data => {
     fixGroup.quaternion.set(
       data[0],
       data[2],
@@ -55,4 +56,8 @@ new Importer({
       data[3]
     );
   })
+
+  socket.on('update-position', data => {
+    // console.log(data);
+  });
 });;

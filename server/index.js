@@ -5,6 +5,7 @@ var socketIo = require("socket.io");        // web socket external module
 var easyrtc = require('./lib/easyrtc_server');               // EasyRTC external module
 var fs      = require("fs");
 
+https.globalAgent.options.rejectUnauthorized = false;
 process.title = "node-easyrtc";
 
 var app = express();

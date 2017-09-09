@@ -1,10 +1,14 @@
 import path from 'path';
 
 export default {
-  entry: './src/index.js',
+  entry: {
+    visual: './src/visual/index.js',
+    controller: './src/controller/index.js'
+  },
+
   output: {
     path: path.resolve(__dirname, './app/'),
-    filename: 'bundle.js'
+    filename: 'bundle.[name].js'
   },
 
   module: {

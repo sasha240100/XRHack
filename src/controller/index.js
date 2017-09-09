@@ -4,7 +4,7 @@ import GyroNorm from 'gyronorm';
 import io from 'socket.io-client';
 
 const gyro = new GyroNorm();
-const socket = io('192.168.1.19:3000');
+const socket = io(`${window.NET_IP || '192.168.1.19'}:3000`);
 
 // console.log(socket);
 

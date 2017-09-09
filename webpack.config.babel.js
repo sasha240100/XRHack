@@ -1,4 +1,8 @@
 import path from 'path';
+import {argv} from 'yargs';
+import webpack from 'webpack';
+
+console.log(argv.host);
 
 export default {
   entry: {
@@ -22,6 +26,12 @@ export default {
       }
     ]
   },
+
+  plugins: [
+    new webpack.DefinePlugin({
+      'window.NET_IP': JSON.stringify(argv.host)
+    })
+  ],
 
   devServer: {
     publicPath: '/app'

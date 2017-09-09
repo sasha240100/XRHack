@@ -1,8 +1,5 @@
 import {Importer, MeshComponent, Group} from 'whs';
 import {MeshBasicMaterial, DoubleSide, Color, AxisHelper} from 'three';
-import io from 'socket.io-client';
-
-const socket = io(`${window.NET_IP || '192.168.1.19'}:3000`);
 
 import {OBJLoader} from '../lib/OBJLoader';
 import {app, camera} from '../app';
@@ -45,19 +42,32 @@ new Importer({
   scale: [scale, scale, scale],
   rotation: [0, -Math.PI / 2, -Math.PI / 2]
 }).addTo(fixGroup).then(controller => {
-  const degToRad = (deg) => deg / 180 * Math.PI;
+  //const degToRad = (deg) => deg / 180 * Math.PI;
 
-
-  socket.on('update-rotation', data => {
-    fixGroup.quaternion.set(
-      data[0],
-      data[2],
-      -data[1],
-      data[3]
-    );
-  })
-
-  socket.on('update-position', data => {
-    // console.log(data);
-  });
 });;
+
+function onMessage(who, msgType, data) {
+    switch(msgType){
+        case 'rotation':
+            let rotation = data
+            fixGroup.quaternion.set(
+                rotation.x,
+                rotation.z,
+                -rotation.y,
+                rotation.w
+            )
+            break;
+
+        case 'position':
+            let pos = data
+            //fixGroup.position.set(-pos.x, -pos.y, -pos.z)
+            break;
+    }
+}
+
+function connect() {
+    easyrtc.setPeerListener(onMessage);
+    easyrtc.connect("easyrtc.instantMessaging");
+}
+
+window.connect = connect

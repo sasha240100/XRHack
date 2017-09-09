@@ -11,7 +11,7 @@ export default {
   },
 
   output: {
-    path: path.resolve(__dirname, './app/'),
+    path: path.resolve(__dirname, './server/build/'),
     filename: 'bundle.[name].js'
   },
 

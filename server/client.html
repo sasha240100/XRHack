@@ -2,42 +2,27 @@
 <html>
 
 <head>
-    <title>EasyRTC Demo: Instant Messaging</title>
+    <title>VR Scene</title>
     <link rel="stylesheet" type="text/css" href="/easyrtc/easyrtc.css" />
     <!-- Assumes global locations for socket.io.js and easyrtc.js -->
     <script src="/socket.io/socket.io.js"></script>
     <script type="text/javascript" src="/easyrtc/easyrtc.js"></script>
-    <script type="text/javascript">
-        function addToConversation(who, msgType, content) {
-            document.getElementById('conversation').innerHTML +=
-                "<b>" + who + ":</b>&nbsp;" + content + "<br />";
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
         }
-        function connect() {
-            easyrtc.setPeerListener(addToConversation);
-            easyrtc.connect("easyrtc.instantMessaging");
-        }
-    </script>
+    </style>
 </head>
-
 <body onload="connect()">
-    <!--hide-->
-    <div id="container">
-        <div id="main">
+    <script>
+        var THREE = {};
 
-            <!-- Main Content -->
-            <h1>EasyRTC Demo: Instant Messaging</h1>
-            <hr />
-            <h2>The Demo</h2>
-            <div id="receiveMessageArea">
-                Received Messages:
-                <div id="conversation"></div>
-            </div>
-
-            <!--hide-->
-            <hr />
-        </div>
-    </div>
-    <!--show-->
+        window.WebVRConfig = {
+            BUFFER_SCALE: 2
+        };
+    </script>
+    <script src='/vendor/webvr-polyfill.min.js'></script>
+    <script src='/build/bundle.visual.js'></script>
 </body>
-
 </html> 

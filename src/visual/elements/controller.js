@@ -1,5 +1,8 @@
 import {Importer, MeshComponent, Group} from 'whs';
 import {MeshBasicMaterial, DoubleSide, Color} from 'three';
+import io from 'socket.io-client';
+
+const socket = io('192.168.1.19:3000');
 
 import {OBJLoader} from '../lib/OBJLoader';
 import {app, camera} from '../app';
@@ -34,4 +37,15 @@ new Importer({
   ],
 
   scale: [scale, scale, scale]
-}).addTo(placementGroup);
+}).addTo(placementGroup).then(controller => {
+  const degToRad = (deg) => deg / 180 * Math.PI;
+
+  socket.on('update', data => {
+
+    controller.rotation.set(
+      degToRad(data[0]),
+      degToRad(data[1]),
+      degToRad(data[2])
+    );
+  })
+});;

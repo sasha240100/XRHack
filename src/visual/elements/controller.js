@@ -57,7 +57,7 @@ new Importer({
     );
   })
 
-  socket.on('update-position', data => {
-    // console.log(data);
+  socket.on('update-position', pos => {
+    fixGroup.position.set(pos[0], pos[1], pos[2])
   });
 });;

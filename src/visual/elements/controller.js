@@ -1,4 +1,4 @@
-import {Importer, MeshComponent} from 'whs';
+import {Importer, MeshComponent, Group} from 'whs';
 import {MeshBasicMaterial, DoubleSide, Color} from 'three';
 
 import {OBJLoader} from '../lib/OBJLoader';
@@ -6,17 +6,11 @@ import {app, camera} from '../app';
 
 import MTLModule from '../modules/MTLModule';
 
-
-// new Box({
-//   geometry: [10, 1, 4],
-//   material: new MeshBasicMaterial({color: 0xff0000}),
-//   scale: [0.2, 0.2, 0.2],
-//   position: [0, 5, 0]
-// }).addTo(app);
+export const placementGroup = new Group();
+placementGroup.position.set(10, 5, -5);
+placementGroup.addTo(app);
 
 const scale = 0.01;
-
-console.log(camera.native);
 
 MTLModule.loader.setTexturePath('/assets/tex/');
 
@@ -39,6 +33,5 @@ new Importer({
     })
   ],
 
-  scale: [scale, scale, scale],
-  position: [10, 5, -5]
-}).addTo(app).then(obj => console.log(obj));
+  scale: [scale, scale, scale]
+}).addTo(placementGroup);

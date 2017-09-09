@@ -12,7 +12,13 @@
   </head>
   <body>
 
-    <script>var THREE = {}</script>
+    <script>
+      var THREE = {};
+
+      window.WebVRConfig = {
+        BUFFER_SCALE: 2
+      };
+    </script>
     <script src='./vendor/webvr-polyfill.min.js'></script>
     <script src='./app/bundle.visual.js'></script>
   </body>

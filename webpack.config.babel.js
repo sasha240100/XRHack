@@ -1,8 +1,7 @@
 import path from 'path';
 import {argv} from 'yargs';
 import webpack from 'webpack';
-
-console.log(argv.host);
+import fs from 'fs';
 
 export default {
   entry: {
@@ -33,7 +32,18 @@ export default {
     })
   ],
 
+  node: {
+    fs: 'empty'
+  },
+
   devServer: {
-    publicPath: '/app'
+    publicPath: '/app',
+    hot: false,
+    disableHostCheck: true,
+    inline: false,
+    https: {
+      cert: fs.readFileSync("./server/cert.pem"),
+      key: fs.readFileSync("./server/key.pem")
+    }
   }
 }

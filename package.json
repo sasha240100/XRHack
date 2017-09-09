@@ -21,6 +21,7 @@
   "homepage": "https://github.com/sasha240100/XRHack#readme",
   "devDependencies": {
     "@hughsk/fulltilt": "^0.7.1",
+    "ar.js": "^1.4.10",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-transform-class-properties": "^6.24.1",
@@ -32,7 +33,6 @@
     "whs": "^2.1.8-vrfix.3"
   },
   "dependencies": {
-    "ar.js": "^1.4.10",
     "socket.io": "^2.0.3",
     "gyronorm": "^2.0.6",
     "three": "^0.87.1"

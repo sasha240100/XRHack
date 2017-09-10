@@ -4,7 +4,7 @@ import '@hughsk/fulltilt/dist/fulltilt.js';
 // --- start
 import AR from 'ar.js/three.js/contribs/npm/build/ar.js';
 
-import {Object3D} from 'three';
+import {PerspectiveCamera} from 'three';
 
 const source = new AR.ArToolkitSource({
   sourceType: 'webcam'
@@ -12,8 +12,8 @@ const source = new AR.ArToolkitSource({
 
 const {sourceWidth, sourceHeight} = source.parameters;
 
-const patternUrl = './patt.hiro';
-const cameraParametersUrl = './camera_para.dat';
+const patternUrl = 'https://192.168.1.19:8443/assets/patt.hiro';
+const cameraParametersUrl = 'https://192.168.1.19:8443/assets/camera_para.dat';
 
 source.init(() => {
   console.log('source is ready');
@@ -26,9 +26,9 @@ const ctx = new AR.ArToolkitContext({
   sourceHeight
 });
 
-console.log(ctx);
+console.log(AR);
 
-const obj = new Object3D();
+const obj = new PerspectiveCamera();
 
 const controls = new AR.ArMarkerControls(ctx, obj, {
   type: 'pattern',
@@ -37,6 +37,7 @@ const controls = new AR.ArMarkerControls(ctx, obj, {
 });
 
 ctx.init(() => {
+  console.log(obj);
   obj.projectionMatrix.fromArray(
     ctx.arController.getCameraMatrix()
   );
@@ -100,7 +101,7 @@ function emitter(){
       requestAnimationFrame(update);
       if (source.ready === false) return;
       ctx.update(source.domElement);
-      console.log(obj.position);
+      // console.log(obj.position);
       easyrtc.sendDataWS(otherEasyrtcid, "position", obj.position);
     }
 

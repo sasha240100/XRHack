@@ -36,6 +36,14 @@ app.get('/assets/tex/screen.png', function(req, res){
     res.sendFile(__dirname + '/assets/tex/screen.png');
 });
 
+app.get('/assets/camera_para.dat', function(req, res){
+    res.sendFile(__dirname + '/assets/camera_para.dat');
+});
+
+app.get('/assets/patt.hiro', function(req, res){
+    res.sendFile(__dirname + '/assets/patt.hiro');
+});
+
 
 var webServer = https.createServer({
     key:  fs.readFileSync("127.0.0.1.key"),

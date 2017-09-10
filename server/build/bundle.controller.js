@@ -57372,8 +57372,8 @@ var _source$parameters = source.parameters,
     sourceHeight = _source$parameters.sourceHeight;
 
 
-var patternUrl = './patt.hiro';
-var cameraParametersUrl = './camera_para.dat';
+var patternUrl = 'https://192.168.1.19:8443/assets/patt.hiro';
+var cameraParametersUrl = 'https://192.168.1.19:8443/assets/camera_para.dat';
 
 source.init(function () {
     console.log('source is ready');
@@ -57386,9 +57386,9 @@ var ctx = new _ar2.default.ArToolkitContext({
     sourceHeight: sourceHeight
 });
 
-console.log(ctx);
+console.log(_ar2.default);
 
-var obj = new _three.Object3D();
+var obj = new _three.PerspectiveCamera();
 
 var controls = new _ar2.default.ArMarkerControls(ctx, obj, {
     type: 'pattern',
@@ -57397,6 +57397,7 @@ var controls = new _ar2.default.ArMarkerControls(ctx, obj, {
 });
 
 ctx.init(function () {
+    console.log(obj);
     obj.projectionMatrix.fromArray(ctx.arController.getCameraMatrix());
 });
 
@@ -57457,7 +57458,7 @@ function emitter() {
         requestAnimationFrame(update);
         if (source.ready === false) return;
         ctx.update(source.domElement);
-        console.log(obj.position);
+        // console.log(obj.position);
         easyrtc.sendDataWS(otherEasyrtcid, "position", obj.position);
     }
 

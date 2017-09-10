@@ -13821,8 +13821,8 @@ function onMessage(who, msgType, data) {
     case 'position':
       var pos = data;
       // fixGroup.position.set(-pos.x, -pos.y, -pos.z)
-      console.log(pos);
-      fixGroup.position.set(pos.x, pos.y, pos.z);
+      fixGroup.position.set(-pos.x, -pos.y, pos.z).multiplyScalar(2);
+      console.log(fixGroup.position);
       break;
   }
 }

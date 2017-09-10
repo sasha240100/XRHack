@@ -76,7 +76,7 @@ function loginFailure(errorCode, message) {
 }
 
 function emitter(){
-    const promiseRotation = new FULLTILT.getDeviceOrientation({ 'type': 'world' });
+    const promiseRotation = new FULLTILT.getDeviceOrientation({ 'type': 'game' });
     const promiseMove = FULLTILT.getDeviceMotion();
 
     promiseRotation.then(controller => {

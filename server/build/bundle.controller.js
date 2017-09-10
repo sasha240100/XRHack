@@ -57433,7 +57433,7 @@ function loginFailure(errorCode, message) {
 }
 
 function emitter() {
-    var promiseRotation = new FULLTILT.getDeviceOrientation({ 'type': 'world' });
+    var promiseRotation = new FULLTILT.getDeviceOrientation({ 'type': 'game' });
     var promiseMove = FULLTILT.getDeviceMotion();
 
     promiseRotation.then(function (controller) {

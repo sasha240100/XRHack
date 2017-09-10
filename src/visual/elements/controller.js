@@ -44,7 +44,7 @@ new Importer({
 }).addTo(fixGroup).then(controller => {
   //const degToRad = (deg) => deg / 180 * Math.PI;
 
-});;
+});
 
 function onMessage(who, msgType, data) {
     switch(msgType){
@@ -60,7 +60,8 @@ function onMessage(who, msgType, data) {
 
         case 'position':
             let pos = data
-            //fixGroup.position.set(-pos.x, -pos.y, -pos.z)
+            // fixGroup.position.set(-pos.x, -pos.y, -pos.z)
+            fixGroup.position.set(pos.x, pos.y, pos.z)
             break;
     }
 }

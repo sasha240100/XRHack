@@ -7,61 +7,12 @@
     <!-- Assumes global locations for socket.io.js and easyrtc.js -->
     <script src="/socket.io/socket.io.js"></script>
     <script type="text/javascript" src="/easyrtc/easyrtc.js"></script>
-    <script src='./build/bundle.controller.js'></script>
-    <script type="text/javascript">
-        var otherEasyrtcid = "";
-        
-        function connect() {
-            easyrtc.setRoomOccupantListener(setRoomOccupantListener);
-            easyrtc.connect("easyrtc.instantMessaging", loginSuccess, loginFailure);
-        }
+    <!-- <script type="text/javascript">
 
-        function setRoomOccupantListener(roomName, occupants, isPrimary) {
-            for (var easyrtcid in occupants) {
-                otherEasyrtcid = easyrtcid;
-            }
-        }
-//        setInterval(function() {
-//            if(""!==otherEasyrtcid){
-//                var text = Math.random();
-//                easyrtc.sendDataWS(otherEasyrtcid, "message", text);
-//            }
-//        }, 1000);
-        function loginSuccess(easyrtcid) {
-            var selfEasyrtcid = easyrtcid;
-            document.getElementById("iam").innerHTML = "I am " + easyrtcid;
-
-            emitter()
-        }
-        function loginFailure(errorCode, message) {
-            easyrtc.showError(errorCode, message);
-        }
-
-        function emitter(){
-            const promiseRotation = new FULLTILT.getDeviceOrientation({ 'type': 'world' });
-            const promiseMove = FULLTILT.getDeviceMotion();
-
-            promiseRotation.then(controller => {
-                // Store the returned FULLTILT.DeviceOrientation object
-                controller.start(data => {
-                    const quat = controller.getFixedFrameQuaternion();
-                    //socket.emit('data-rotation', [quat.x, quat.y, quat.z, quat.w]);
-                    easyrtc.sendDataWS(otherEasyrtcid, "rotation", quat);
-                })
-            });
-
-            promiseMove.then(deviceMotion => {
-                deviceMotion.start(data => {
-                    const pos = deviceMotion.getScreenAdjustedAcceleration();
-                    //socket.emit('data-position', [pos.x, pos.y, pos.z]);
-                    easyrtc.sendDataWS(otherEasyrtcid, "position", pos);
-                })
-            })
-        }
-    </script>
+    </script> -->
 </head>
 
-<body onload="connect()">
+<body>
     <!--hide-->
     <div id="container">
         <div id="main">
@@ -79,6 +30,7 @@
         </div>
     </div>
     <!--show-->
+    <script src='/build/bundle.controller.js'></script>
 </body>
 
 </html>

@@ -73,6 +73,59 @@
 
 __webpack_require__(12);
 
+var otherEasyrtcid = "";
+
+function connect() {
+    easyrtc.setRoomOccupantListener(setRoomOccupantListener);
+    easyrtc.connect("easyrtc.instantMessaging", loginSuccess, loginFailure);
+}
+
+function setRoomOccupantListener(roomName, occupants, isPrimary) {
+    for (var easyrtcid in occupants) {
+        otherEasyrtcid = easyrtcid;
+    }
+}
+//        setInterval(function() {
+//            if(""!==otherEasyrtcid){
+//                var text = Math.random();
+//                easyrtc.sendDataWS(otherEasyrtcid, "message", text);
+//            }
+//        }, 1000);
+function loginSuccess(easyrtcid) {
+    var selfEasyrtcid = easyrtcid;
+    document.getElementById("iam").innerHTML = "I am " + easyrtcid;
+
+    emitter();
+}
+function loginFailure(errorCode, message) {
+    easyrtc.showError(errorCode, message);
+}
+
+function emitter() {
+    var promiseRotation = new FULLTILT.getDeviceOrientation({ 'type': 'world' });
+    var promiseMove = FULLTILT.getDeviceMotion();
+
+    promiseRotation.then(function (controller) {
+        // Store the returned FULLTILT.DeviceOrientation object
+        controller.start(function (data) {
+            var quat = controller.getFixedFrameQuaternion();
+            //socket.emit('data-rotation', [quat.x, quat.y, quat.z, quat.w]);
+            easyrtc.sendDataWS(otherEasyrtcid, "rotation", quat);
+        });
+    });
+
+    promiseMove.then(function (deviceMotion) {
+        deviceMotion.start(function (data) {
+            var pos = deviceMotion.getScreenAdjustedAcceleration();
+            //socket.emit('data-position', [pos.x, pos.y, pos.z]);
+            console.log(pos);
+            easyrtc.sendDataWS(otherEasyrtcid, "position", pos);
+        });
+    });
+}
+
+connect();
+
 /***/ }),
 
 /***/ 12:

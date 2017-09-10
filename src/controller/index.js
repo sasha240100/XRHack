@@ -1,5 +1,51 @@
 import '@hughsk/fulltilt/dist/fulltilt.js';
 
+
+// --- start
+import AR from 'ar.js/three.js/contribs/npm/build/ar.js';
+
+import {Object3D} from 'three';
+
+const source = new AR.ArToolkitSource({
+  sourceType: 'webcam'
+});
+
+const {sourceWidth, sourceHeight} = source.parameters;
+
+const patternUrl = './patt.hiro';
+const cameraParametersUrl = './camera_para.dat';
+
+source.init(() => {
+  console.log('source is ready');
+});
+
+const ctx = new AR.ArToolkitContext({
+  detectionMode: 'mono',
+  cameraParametersUrl,
+  sourceWidth,
+  sourceHeight
+});
+
+console.log(ctx);
+
+const obj = new Object3D();
+
+const controls = new AR.ArMarkerControls(ctx, obj, {
+  type: 'pattern',
+  patternUrl: patternUrl,
+  changeMatrixMode: 'cameraTransformMatrix'
+});
+
+ctx.init(() => {
+  obj.projectionMatrix.fromArray(
+    ctx.arController.getCameraMatrix()
+  );
+});
+
+
+// --- end
+
+
 var otherEasyrtcid = "";
 
 function connect() {
@@ -41,14 +87,24 @@ function emitter(){
         })
     });
 
-    promiseMove.then(deviceMotion => {
-        deviceMotion.start(data => {
-            const pos = deviceMotion.getScreenAdjustedAcceleration();
-            //socket.emit('data-position', [pos.x, pos.y, pos.z]);
-            console.log(pos);
-            easyrtc.sendDataWS(otherEasyrtcid, "position", pos);
-        })
-    })
+    // promiseMove.then(deviceMotion => {
+    //     deviceMotion.start(data => {
+    //         const pos = deviceMotion.getScreenAdjustedAcceleration();
+    //         //socket.emit('data-position', [pos.x, pos.y, pos.z]);
+    //         console.log(pos);
+    //         easyrtc.sendDataWS(otherEasyrtcid, "position", pos);
+    //     })
+    // })
+
+    function update() {
+      requestAnimationFrame(update);
+      if (source.ready === false) return;
+      ctx.update(source.domElement);
+      console.log(obj.position);
+      easyrtc.sendDataWS(otherEasyrtcid, "position", obj.position);
+    }
+
+    update();
 }
 
 connect();

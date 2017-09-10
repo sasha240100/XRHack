@@ -56,11 +56,13 @@ function onMessage(who, msgType, data) {
                 -rotation.y,
                 rotation.w
             )
+            // console.log(rotation);
             break;
 
         case 'position':
             let pos = data
             // fixGroup.position.set(-pos.x, -pos.y, -pos.z)
+            console.log(pos);
             fixGroup.position.set(pos.x, pos.y, pos.z)
             break;
     }

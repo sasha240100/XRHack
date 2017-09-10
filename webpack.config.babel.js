@@ -33,6 +33,10 @@ export default {
     })
   ],
 
+  node: {
+    fs: 'empty'
+  },
+
   devServer: {
     publicPath: '/app'
   }

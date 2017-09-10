@@ -10,7 +10,7 @@ import {
   Group
 } from 'whs';
 
-// import * as VRKit from 'whs/modules/VRKit.js';
+import * as VRKit from 'whs/modules/VRKit.js';
 
 export const camera = new PerspectiveCamera({
   position: [0, 0, 5]
@@ -28,16 +28,16 @@ export const app = new App([
   new RenderingModule({bgColor: 0xe7e7e7}),
   new OrbitControlsModule(),
   new ResizeModule(),
-  // new VRKit.VR2Module()
+  new VRKit.VR2Module()
 ]);
 
 cameraGroup.addTo(app);
 
-// app.module(
-//   new VRKit.VRControls({
-//     object: app.get('camera'),
-//     intensity: 10
-//   })
-// )
+app.module(
+  new VRKit.VRControls({
+    object: app.get('camera'),
+    intensity: 10
+  })
+)
 
 app.start();

@@ -57363,8 +57363,32 @@ var _three = __webpack_require__(9);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // --- start
+var scene = new _three.Scene();
+var renderer = new _three.WebGLRenderer({ alpha: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+// console.log(window.innerWidth / window.innerHeight);
+// const camera1 = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
+var camera = new _three.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
+// camera1.lookAt(new Vector3(0, 0, 10));
+
+var sphere = new _three.Mesh(new _three.SphereGeometry(1, 32, 32), new _three.MeshBasicMaterial({ color: 0xffffff }));
+
+// sphere.position.set(0, 0, 10);
+
+scene.add(sphere);
+
+document.body.appendChild(renderer.domElement);
+
+function render() {
+  requestAnimationFrame(render);
+  // console.log(camera.position);/
+  renderer.render(scene, camera);
+}
+
+render();
+
 var source = new _ar2.default.ArToolkitSource({
-    sourceType: 'webcam'
+  sourceType: 'webcam'
 });
 
 var _source$parameters = source.parameters,
@@ -57376,29 +57400,34 @@ var patternUrl = 'https://192.168.1.19:8443/assets/patt.hiro';
 var cameraParametersUrl = 'https://192.168.1.19:8443/assets/camera_para.dat';
 
 source.init(function () {
-    console.log('source is ready');
+  console.log('source is ready');
 });
 
 var ctx = new _ar2.default.ArToolkitContext({
-    detectionMode: 'mono',
-    cameraParametersUrl: cameraParametersUrl,
-    sourceWidth: sourceWidth,
-    sourceHeight: sourceHeight
+  detectionMode: 'mono',
+  cameraParametersUrl: cameraParametersUrl,
+  sourceWidth: sourceWidth,
+  sourceHeight: sourceHeight
 });
 
 console.log(_ar2.default);
 
-var obj = new _three.PerspectiveCamera();
+var controls = new _ar2.default.ArMarkerControls(ctx, camera, {
+  type: 'pattern',
+  patternUrl: patternUrl,
+  changeMatrixMode: 'cameraTransformMatrix'
+});
 
-var controls = new _ar2.default.ArMarkerControls(ctx, obj, {
-    type: 'pattern',
-    patternUrl: patternUrl,
-    changeMatrixMode: 'cameraTransformMatrix'
+var smoothedRoot = new _three.Object3D();
+var smoothedControls = new _ar2.default.ArSmoothedControls(smoothedRoot, {
+  lerpPosition: 0.4,
+  lerpQuaternion: 0.3,
+  lerpScale: 1
 });
 
 ctx.init(function () {
-    console.log(obj);
-    obj.projectionMatrix.fromArray(ctx.arController.getCameraMatrix());
+  console.log(camera);
+  camera.projectionMatrix.fromArray(ctx.arController.getCameraMatrix());
 });
 
 // --- end
@@ -57407,14 +57436,14 @@ ctx.init(function () {
 var otherEasyrtcid = "";
 
 function connect() {
-    easyrtc.setRoomOccupantListener(setRoomOccupantListener);
-    easyrtc.connect("easyrtc.instantMessaging", loginSuccess, loginFailure);
+  easyrtc.setRoomOccupantListener(setRoomOccupantListener);
+  easyrtc.connect("easyrtc.instantMessaging", loginSuccess, loginFailure);
 }
 
 function setRoomOccupantListener(roomName, occupants, isPrimary) {
-    for (var easyrtcid in occupants) {
-        otherEasyrtcid = easyrtcid;
-    }
+  for (var easyrtcid in occupants) {
+    otherEasyrtcid = easyrtcid;
+  }
 }
 //        setInterval(function() {
 //            if(""!==otherEasyrtcid){
@@ -57423,46 +57452,53 @@ function setRoomOccupantListener(roomName, occupants, isPrimary) {
 //            }
 //        }, 1000);
 function loginSuccess(easyrtcid) {
-    var selfEasyrtcid = easyrtcid;
-    document.getElementById("iam").innerHTML = "I am " + easyrtcid;
+  var selfEasyrtcid = easyrtcid;
+  // document.getElementById("iam").innerHTML = "I am " + easyrtcid;
 
-    emitter();
+  emitter();
 }
 function loginFailure(errorCode, message) {
-    easyrtc.showError(errorCode, message);
+  easyrtc.showError(errorCode, message);
 }
 
 function emitter() {
-    var promiseRotation = new FULLTILT.getDeviceOrientation({ 'type': 'game' });
-    var promiseMove = FULLTILT.getDeviceMotion();
+  var promiseRotation = new FULLTILT.getDeviceOrientation({ 'type': 'game' });
+  var promiseMove = FULLTILT.getDeviceMotion();
 
-    promiseRotation.then(function (controller) {
-        // Store the returned FULLTILT.DeviceOrientation object
-        controller.start(function (data) {
-            var quat = controller.getFixedFrameQuaternion();
-            //socket.emit('data-rotation', [quat.x, quat.y, quat.z, quat.w]);
-            easyrtc.sendDataWS(otherEasyrtcid, "rotation", quat);
-        });
+  promiseRotation.then(function (controller) {
+    // Store the returned FULLTILT.DeviceOrientation cameraect
+    controller.start(function (data) {
+      var quat = controller.getFixedFrameQuaternion();
+      //socket.emit('data-rotation', [quat.x, quat.y, quat.z, quat.w]);
+      easyrtc.sendDataWS(otherEasyrtcid, "rotation", quat);
     });
+  });
 
-    // promiseMove.then(deviceMotion => {
-    //     deviceMotion.start(data => {
-    //         const pos = deviceMotion.getScreenAdjustedAcceleration();
-    //         //socket.emit('data-position', [pos.x, pos.y, pos.z]);
-    //         console.log(pos);
-    //         easyrtc.sendDataWS(otherEasyrtcid, "position", pos);
-    //     })
-    // })
+  // promiseMove.then(deviceMotion => {
+  //     deviceMotion.start(data => {
+  //         const pos = deviceMotion.getScreenAdjustedAcceleration();
+  //         //socket.emit('data-position', [pos.x, pos.y, pos.z]);
+  //         console.log(pos);
+  //         easyrtc.sendDataWS(otherEasyrtcid, "position", pos);
+  //     })
+  // })
 
-    function update() {
-        requestAnimationFrame(update);
-        if (source.ready === false) return;
-        ctx.update(source.domElement);
-        // console.log(obj.position);
-        easyrtc.sendDataWS(otherEasyrtcid, "position", obj.position);
-    }
+  function update() {
+    requestAnimationFrame(update);
+    if (source.ready === false) return;
+    ctx.update(source.domElement);
+    smoothedControls.update(camera);
+    camera.projectionMatrix.copy(ctx.getProjectionMatrix());
+    // console.log(ctx.getProjectionMatrix().elements);
+    // console.log(camera.position);
+    // easyrtc.sendDataWS(otherEasyrtcid, "position", camera.position);
+  }
 
-    update();
+  setInterval(function () {
+    easyrtc.sendDataWS(otherEasyrtcid, "position", smoothedRoot.position);
+  }, 100);
+
+  update();
 }
 
 connect();

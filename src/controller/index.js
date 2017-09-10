@@ -4,7 +4,43 @@ import '@hughsk/fulltilt/dist/fulltilt.js';
 // --- start
 import AR from 'ar.js/three.js/contribs/npm/build/ar.js';
 
-import {PerspectiveCamera} from 'three';
+import {
+  PerspectiveCamera,
+  Object3D,
+  Vector3,
+  Scene,
+  WebGLRenderer,
+  Mesh,
+  SphereGeometry,
+  MeshBasicMaterial
+} from 'three';
+
+const scene = new Scene();
+const renderer = new WebGLRenderer({alpha: true});
+renderer.setSize(window.innerWidth, window.innerHeight);
+// console.log(window.innerWidth / window.innerHeight);
+// const camera1 = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
+const camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
+// camera1.lookAt(new Vector3(0, 0, 10));
+
+const sphere = new Mesh(
+  new SphereGeometry(1, 32, 32),
+  new MeshBasicMaterial({color: 0xffffff})
+);
+
+// sphere.position.set(0, 0, 10);
+
+scene.add(sphere);
+
+document.body.appendChild(renderer.domElement);
+
+function render() {
+  requestAnimationFrame(render);
+  // console.log(camera.position);/
+  renderer.render(scene, camera);
+}
+
+render();
 
 const source = new AR.ArToolkitSource({
   sourceType: 'webcam'
@@ -28,17 +64,24 @@ const ctx = new AR.ArToolkitContext({
 
 console.log(AR);
 
-const obj = new PerspectiveCamera();
 
-const controls = new AR.ArMarkerControls(ctx, obj, {
+
+const controls = new AR.ArMarkerControls(ctx, camera, {
   type: 'pattern',
   patternUrl: patternUrl,
   changeMatrixMode: 'cameraTransformMatrix'
 });
 
+const smoothedRoot = new Object3D();
+const smoothedControls = new AR.ArSmoothedControls(smoothedRoot, {
+  lerpPosition: 0.4,
+  lerpQuaternion: 0.3,
+  lerpScale: 1
+});
+
 ctx.init(() => {
-  console.log(obj);
-  obj.projectionMatrix.fromArray(
+  console.log(camera);
+  camera.projectionMatrix.fromArray(
     ctx.arController.getCameraMatrix()
   );
 });
@@ -67,7 +110,7 @@ function setRoomOccupantListener(roomName, occupants, isPrimary) {
 //        }, 1000);
 function loginSuccess(easyrtcid) {
     var selfEasyrtcid = easyrtcid;
-    document.getElementById("iam").innerHTML = "I am " + easyrtcid;
+    // document.getElementById("iam").innerHTML = "I am " + easyrtcid;
 
     emitter()
 }
@@ -80,7 +123,7 @@ function emitter(){
     const promiseMove = FULLTILT.getDeviceMotion();
 
     promiseRotation.then(controller => {
-        // Store the returned FULLTILT.DeviceOrientation object
+        // Store the returned FULLTILT.DeviceOrientation cameraect
         controller.start(data => {
             const quat = controller.getFixedFrameQuaternion();
             //socket.emit('data-rotation', [quat.x, quat.y, quat.z, quat.w]);
@@ -101,9 +144,16 @@ function emitter(){
       requestAnimationFrame(update);
       if (source.ready === false) return;
       ctx.update(source.domElement);
-      // console.log(obj.position);
-      easyrtc.sendDataWS(otherEasyrtcid, "position", obj.position);
+      smoothedControls.update(camera);
+      camera.projectionMatrix.copy(ctx.getProjectionMatrix());
+      // console.log(ctx.getProjectionMatrix().elements);
+      // console.log(camera.position);
+      // easyrtc.sendDataWS(otherEasyrtcid, "position", camera.position);
     }
+
+    setInterval(() => {
+      easyrtc.sendDataWS(otherEasyrtcid, "position", smoothedRoot.position);
+    }, 100);
 
     update();
 }
